@@ -1,0 +1,10 @@
+# Assignment D1
+name  : D1
+description : "Statistisk programmering med R: Lab 1"
+tasks:
+  simple_lm:
+    url:
+      - tasks/simple_lm_tests.R
+mandatory:
+  url:
+    - mandatory_group.R
