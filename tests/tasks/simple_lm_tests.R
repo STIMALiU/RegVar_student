@@ -28,6 +28,30 @@ test_that("simple_lm", {
   expect_error(simple_lm(x = 1:20,y = 1:3),"not the same number of elements in x and y",
                info="Fel: Funktionen ger inte rätt felmeddlende när x och y är olika långa")
   
+  # testar output
+  expect_true(is.list(simple_lm(x = 1:20,y = 3*(1:20)+4)),
+              info="Fel: Funktionen returnerar inte en lista")
+  
+  expect_equal(names(simple_lm(x = 1:20,y = -4*(1:20)-30)),c("beta0","beta1","sigma"),
+               info="Fel: Funktionen returnerar inte en lista med rätt namn på elementen")
+  
+  # data utan brus:
+  # testar fallet: simple_lm(x = 1:20,y = 1:20+4)
+  expect_equal( simple_lm(x = 1:20,y = 1:20+4)$beta1,1,
+                info="beta1 är ej korrekt för simple_lm(x = 1:20,y = 1:20+4)")
+  expect_equal( simple_lm(x = 1:20,y = 1:20+4)$beta0,4,
+                info="beta0 är ej korrekt för simple_lm(x = 1:20,y = 1:20+4)")
+  expect_equal( simple_lm(x = 1:20,y = 1:20+4)$sigma,0,
+                info="sigma är ej korrekt för simple_lm(x = 1:20,y = 1:20+4)")
+  
+  
+  # testar fallet: simple_lm(x = 1:30,y = -5*(1:30)-100)
+  expect_equal( simple_lm(x = 1:30,y = -5*(1:30)-100)$beta1,-5,
+                info="beta1 är ej korrekt för simple_lm(x = 1:30,y = -5*(1:30)-100)")
+  expect_equal( simple_lm(x = 1:30,y = -5*(1:30)-100)$beta0,-100,
+                info="beta0 är ej korrekt för simple_lm(x = 1:30,y = -5*(1:30)-100)")
+  expect_equal( simple_lm(x = 1:30,y = -5*(1:30)-100)$sigma,0,
+                info="sigma är ej korrekt för simple_lm(x = 1:30,y = -5*(1:30)-100)")
   
   # expect_error(simple_lm()(1:4),
   #              info="Fel: Funktionen avbryter/stoppar inte om x har jämt antal element.")
