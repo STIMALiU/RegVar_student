@@ -1,6 +1,6 @@
 # Assignment D1
 name  : D1
-description : "Statistisk programmering med R: Lab 1"
+description :  "732G46: Lab 1"
 tasks:
   simple_lm:
     url:
