@@ -2,7 +2,7 @@
 name  : D2
 description :  "732G46: Lab 2"
 tasks:
-  simple_lm:
+  lm_func:
     url:
       - tasks/lm_func_tests.R
 mandatory:
