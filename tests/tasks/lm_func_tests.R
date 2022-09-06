@@ -75,6 +75,14 @@ test_that("lm_func", {
   expect_false(package_loaded(object = "vcov"),
                info = "Fel: Paketet vcov används i funktionen.")
   
+  #-----------------------------------------------------------------------------
+  comp1<-readRDS(file = url("https://github.com/STIMALiU/RegVar_student/blob/main/tests/tasks/test_rds.rds?raw=true","rb"))
+  
+  #lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)) 
+  
+  
+  expect_equal( lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)) ,comp1,
+                info="beta1 är ej korrekt för lm_func(x = 1:20,y = 1:20+4)")
   
   
   
