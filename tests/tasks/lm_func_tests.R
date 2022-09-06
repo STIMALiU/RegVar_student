@@ -3,6 +3,7 @@ context("lm_func()")
 test_that("lm_func", {  
   
   
+  
   body_contain<-function(object,expected) {any(grepl(x = as.character(body(object)), pattern = expected))}
   package_loaded<-function(object){any(grepl(object, search()))}
   
@@ -76,14 +77,162 @@ test_that("lm_func", {
                info = "Fel: Paketet vcov används i funktionen.")
   
   #-----------------------------------------------------------------------------
-  comp1<-readRDS(file = url("https://github.com/STIMALiU/RegVar_student/blob/main/tests/tasks/test_rds.rds?raw=true","rb"))
+  # testar att funktionen räknar rätt
+  #-----------------------------------------------------------------------------
   
-  #lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)) 
+  comp_list<-readRDS(file = url("https://github.com/STIMALiU/RegVar_student/blob/main/tests/tasks/test_list_lab2.rds?raw=true","rb"))
+  
+  #-----------------------------------------------------------------------------
+  list1<-lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0))
+  # test: test1
+  expect_true(object = all.equal(list1$beta,comp_list$test1$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)")
+  expect_true(object = all.equal(list1$sigma,comp_list$test1$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)")
+  expect_true(object = all.equal(list1$beta_cov,comp_list$test1$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)")
+  #-----------------------------------------------------------------------------
   
   
-  expect_equal( lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)) ,comp1,
-                info="beta1 är ej korrekt för lm_func(x = 1:20,y = 1:20+4)")
+  #-----------------------------------------------------------------------------
+  list2<-lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))
+  # test: test2
+  expect_true(object = all.equal(list2$beta,comp_list$test2$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))")
+  expect_true(object = all.equal(list2$sigma,comp_list$test2$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))")
+  expect_true(object = all.equal(list2$beta_cov,comp_list$test2$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))")
+  #-----------------------------------------------------------------------------
   
+  
+  #-----------------------------------------------------------------------------
+  list3<-lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) 
+  # test: test3
+  expect_true(object = all.equal(list3$beta,comp_list$test3$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
+  expect_true(object = all.equal(list3$sigma,comp_list$test3$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
+  expect_true(object = all.equal(list3$beta_cov,comp_list$test3$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
+  expect_true(object = all.equal(list3$test_mat,comp_list$test3$test_mat,check.attributes=FALSE),
+              info = "elementet test_mat är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  list4<-lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5))
+  # test: test4
+  expect_true(object = all.equal(list4$beta,comp_list$test4$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
+  expect_true(object = all.equal(list4$sigma,comp_list$test4$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
+  expect_true(object = all.equal(list4$beta_cov,comp_list$test4$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
+  expect_true(object = all.equal(list4$test_mat,comp_list$test4$test_mat,check.attributes=FALSE),
+              info = "elementet test_mat är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  list5<-lm_func(X = trees[1:15,1:2],y = trees$Volume[1:15],beta_test = TRUE,mu0 = c(0,0,0))
+  # test: test4
+  expect_true(object = all.equal(list5$beta,comp_list$test5$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = trees[1:15,1:2],y = trees$Volume[1:15],beta_test = TRUE,mu0 = c(0,0,0)) ")
+  expect_true(object = all.equal(list5$sigma,comp_list$test5$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = trees[1:15,1:2],y = trees$Volume[1:15],beta_test = TRUE,mu0 = c(0,0,0)) ")
+  expect_true(object = all.equal(list5$beta_cov,comp_list$test5$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = trees[1:15,1:2],y = trees$Volume[1:15],beta_test = TRUE,mu0 = c(0,0,0)) ")
+  expect_true(object = all.equal(list5$test_mat,comp_list$test5$test_mat,check.attributes=FALSE),
+              info = "elementet test_mat är ej korrekt för lm_func(X = trees[1:15,1:2],y = trees$Volume[1:15],beta_test = TRUE,mu0 = c(0,0,0))")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  library(car) 
+  data(Prestige) 
+  list6<-lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = FALSE,mu0 = c(0,0,0,0)) 
+  # test: test4
+  expect_true(object = all.equal(list6$beta,comp_list$test6$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = FALSE,mu0 = c(0,0,0,0))  ")
+  expect_true(object = all.equal(list6$sigma,comp_list$test6$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = FALSE,mu0 = c(0,0,0,0))  ")
+  expect_true(object = all.equal(list6$beta_cov,comp_list$test6$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = FALSE,mu0 = c(0,0,0,0))  ")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  list7<-lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(0,0,0,0)) 
+  # test: test4
+  expect_true(object = all.equal(list7$beta,comp_list$test7$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(0,0,0,0)) ")
+  expect_true(object = all.equal(list7$sigma,comp_list$test7$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(0,0,0,0)) ")
+  expect_true(object = all.equal(list7$beta_cov,comp_list$test7$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(0,0,0,0)) ")
+  expect_true(object = all.equal(list7$test_mat,comp_list$test7$test_mat,check.attributes=FALSE),
+              info = "elementet test_mat är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(0,0,0,0)) ")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  list8<-lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01))
+  # test: test4
+  expect_true(object = all.equal(list8$beta,comp_list$test8$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01)) ")
+  expect_true(object = all.equal(list8$sigma,comp_list$test8$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01)) ")
+  expect_true(object = all.equal(list8$beta_cov,comp_list$test8$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01)) ")
+  expect_true(object = all.equal(list8$test_mat,comp_list$test8$test_mat,check.attributes=FALSE),
+              info = "elementet test_mat är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01)) ")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  set.seed(35) 
+  X<-matrix(data = runif(n = 4*300,min = -1,max = 1),nrow = 300,ncol = 4) 
+  beta_vect<-c(2,0,0,-3) 
+  set.seed(53) 
+  y<- as.vector(-2 + X%*%beta_vect+rnorm(n = 300)) 
+  list9<-lm_func(X = X,y =y,beta_test = FALSE,mu0 = c(0,0,0,0,0)) 
+  # test: test4
+  expect_true(object = all.equal(list9$beta,comp_list$test9$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = X,y =y,beta_test = FALSE,mu0 = c(0,0,0,0,0)), X och y är simulerade, se labben")
+  expect_true(object = all.equal(list9$sigma,comp_list$test9$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = X,y =y,beta_test = FALSE,mu0 = c(0,0,0,0,0)), X och y är simulerade, se labben")
+  expect_true(object = all.equal(list9$beta_cov,comp_list$test9$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = X,y =y,beta_test = FALSE,mu0 = c(0,0,0,0,0)), X och y är simulerade, se labben")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  list10<-lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(0,0,0,0,0)) 
+  # test: test4
+  expect_true(object = all.equal(list10$beta,comp_list$test10$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(0,0,0,0,0)), X och y är simulerade, se labben ")
+  expect_true(object = all.equal(list10$sigma,comp_list$test10$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(0,0,0,0,0))), X och y är simulerade, se labben ")
+  expect_true(object = all.equal(list10$beta_cov,comp_list$test10$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(0,0,0,0,0)), X och y är simulerade, se labben ")
+  expect_true(object = all.equal(list10$test_mat,comp_list$test10$test_mat,check.attributes=FALSE),
+              info = "elementet test_mat är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(0,0,0,0,0)), X och y är simulerade, se labben ")
+  #-----------------------------------------------------------------------------
+  
+  
+  #-----------------------------------------------------------------------------
+  list11<-lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)) 
+  # test: test4
+  expect_true(object = all.equal(list11$beta,comp_list$test11$beta,check.attributes=FALSE),
+              info = "elementet beta är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)), X och y är simulerade, se labben ")
+  expect_true(object = all.equal(list11$sigma,comp_list$test11$sigma,check.attributes=FALSE),
+              info = "elementet sigma är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)), X och y är simulerade, se labben ")
+  expect_true(object = all.equal(list11$beta_cov,comp_list$test11$beta_cov,check.attributes=FALSE),
+              info = "elementet beta_cov är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)), X och y är simulerade, se labben ")
+  expect_true(object = all.equal(list11$test_mat,comp_list$test11$test_mat,check.attributes=FALSE),
+              info = "elementet test_mat är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)), X och y är simulerade, se labben ")
+  #-----------------------------------------------------------------------------
   
   
 })
