@@ -85,11 +85,11 @@ test_that("lm_func", {
   #-----------------------------------------------------------------------------
   list1<-lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0))
   # test: test1
-  expect_true(object = all.equal(list1$beta,comp_list$test1$beta,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list1$beta,comp_list$test1$beta,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)")
-  expect_true(object = all.equal(list1$sigma,comp_list$test1$sigma,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list1$sigma,comp_list$test1$sigma,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet sigma är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)")
-  expect_true(object = all.equal(list1$beta_cov,comp_list$test1$beta_cov,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list1$beta_cov,comp_list$test1$beta_cov,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0)")
   #-----------------------------------------------------------------------------
   
@@ -97,11 +97,11 @@ test_that("lm_func", {
   #-----------------------------------------------------------------------------
   list2<-lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))
   # test: test2
-  expect_true(object = all.equal(list2$beta,comp_list$test2$beta,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list2$beta,comp_list$test2$beta,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta är ej korrekt för lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))")
-  expect_true(object = all.equal(list2$sigma,comp_list$test2$sigma,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list2$sigma,comp_list$test2$sigma,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet sigma är ej korrekt för lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))")
-  expect_true(object = all.equal(list2$beta_cov,comp_list$test2$beta_cov,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list2$beta_cov,comp_list$test2$beta_cov,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1:2],y = trees$Volume,beta_test = FALSE,mu0 = c(0,0,0))")
   #-----------------------------------------------------------------------------
   
@@ -109,13 +109,13 @@ test_that("lm_func", {
   #-----------------------------------------------------------------------------
   list3<-lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) 
   # test: test3
-  expect_true(object = all.equal(list3$beta,comp_list$test3$beta,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list3$beta,comp_list$test3$beta,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
-  expect_true(object = all.equal(list3$sigma,comp_list$test3$sigma,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list3$sigma,comp_list$test3$sigma,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet sigma är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
-  expect_true(object = all.equal(list3$beta_cov,comp_list$test3$beta_cov,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list3$beta_cov,comp_list$test3$beta_cov,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
-  expect_true(object = all.equal(list3$test_mat,comp_list$test3$test_mat,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list3$test_mat,comp_list$test3$test_mat,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet test_mat är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(0,0)) ")
   #-----------------------------------------------------------------------------
   
@@ -123,13 +123,13 @@ test_that("lm_func", {
   #-----------------------------------------------------------------------------
   list4<-lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5))
   # test: test4
-  expect_true(object = all.equal(list4$beta,comp_list$test4$beta,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list4$beta,comp_list$test4$beta,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
-  expect_true(object = all.equal(list4$sigma,comp_list$test4$sigma,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list4$sigma,comp_list$test4$sigma,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet sigma är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
-  expect_true(object = all.equal(list4$beta_cov,comp_list$test4$beta_cov,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list4$beta_cov,comp_list$test4$beta_cov,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta_cov är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
-  expect_true(object = all.equal(list4$test_mat,comp_list$test4$test_mat,check.attributes=FALSE,tolerance=1e-6,tolerance=1e-6),
+  expect_true(object = all.equal(list4$test_mat,comp_list$test4$test_mat,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet test_mat är ej korrekt för lm_func(X = trees[,1,drop=FALSE],y = trees$Volume,beta_test = TRUE,mu0 = c(-35,5)) ")
   #-----------------------------------------------------------------------------
   
