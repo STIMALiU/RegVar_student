@@ -231,7 +231,7 @@ test_that("lm_func", {
               info = "elementet sigma är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)), X och y är simulerade, se labben ")
   expect_true(object = all.equal(list11$beta_cov,comp_list$test11$beta_cov,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta_cov är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)), X och y är simulerade, se labben ")
-  expect_true(object = all.equal(list11$test_mat,comp_list$test11$test_mat,check.attributes=FALSE,tolerance=1e-6),
+  expect_true(object = all.equal(list11$test_mat,comp_list$test11$test_mat,check.attributes=FALSE,tolerance=1e-5),
               info = "elementet test_mat är ej korrekt för lm_func(X = X,y =y,beta_test = TRUE,mu0 = c(-2,2,0,0,-3)), X och y är simulerade, se labben ")
   #-----------------------------------------------------------------------------
   
