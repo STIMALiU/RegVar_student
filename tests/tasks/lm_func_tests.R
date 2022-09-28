@@ -185,7 +185,7 @@ test_that("lm_func", {
               info = "elementet sigma är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01)) ")
   expect_true(object = all.equal(list8$beta_cov,comp_list$test8$beta_cov,check.attributes=FALSE,tolerance=1e-6),
               info = "elementet beta_cov är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01)) ")
-  expect_true(object = all.equal(list8$test_mat,comp_list$test8$test_mat,check.attributes=FALSE,tolerance=1e-6),
+  expect_true(object = all.equal(list8$test_mat,comp_list$test8$test_mat,check.attributes=FALSE,tolerance=1e-5),
               info = "elementet test_mat är ej korrekt för lm_func(X = Prestige[,1:3],y = Prestige[,4],beta_test = TRUE,mu0 = c(-6,4,0.001,0.01)) ")
   #-----------------------------------------------------------------------------
   
