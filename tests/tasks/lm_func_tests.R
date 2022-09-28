@@ -193,6 +193,7 @@ test_that("lm_func", {
   #-----------------------------------------------------------------------------
   set.seed(35) 
   X<-matrix(data = runif(n = 4*300,min = -1,max = 1),nrow = 300,ncol = 4) 
+  colnames(X)<-letters[1:4]
   beta_vect<-c(2,0,0,-3) 
   set.seed(53) 
   y<- as.vector(-2 + X%*%beta_vect+rnorm(n = 300)) 
