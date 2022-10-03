@@ -1,6 +1,6 @@
 ################################################################################
 ################################################################################
-# Multipel linjär logistik regression
+# Multipel linjär logistisk regression
 ################################################################################
 ################################################################################
 
@@ -153,7 +153,7 @@ z_hat2<-coef(A1)[1]+coef(A1)[2]*x1+coef(A1)[3]*x2
 z_hat-z_hat2
 
 
-# linjär logistik regression skapar linjära beslutsgränser
+# linjär logistisk regression skapar linjära beslutsgränser
 # om vi har två kontinuerlig förklarande variabler så kommer variabelrummet
 # som baseras på x1 och x2 delas av en en rät linje 
 # där alla punkter under linjen predikteras till en klass och alla punkter

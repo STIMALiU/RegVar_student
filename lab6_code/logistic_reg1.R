@@ -1,6 +1,6 @@
 ################################################################################
 ################################################################################
-# Enkel linjär logistik regression
+# Enkel linjär logistisk regression
 ################################################################################
 ################################################################################
 
@@ -61,7 +61,7 @@ df1 %>%
   ggplot(aes(x, y)) +
   geom_point(alpha = .3,aes(col=class)) 
 
-# lägga till skattad logistik funktion 
+# lägga till skattad logistisk funktion 
 p1<-df1 %>%
   ggplot(aes(x, y)) +
   geom_point(alpha = .3,aes(col=class)) +
@@ -169,7 +169,7 @@ df1 %>%
 
 ?glm
 # glm kan anpassa olika generaliserade linjära modeller 
-# family = "binomial" ger logistik regression
+# family = "binomial" ger logistisk regression
 A1<-glm(formula = y~x,family = "binomial")
 
 A1
@@ -203,7 +203,7 @@ y_hat_prob2<-logistic_func(z_hat)
 y_hat<-ifelse(y_hat_prob>=0.5,1,0)
 
 
-# linjär logistik regression skapar linjära beslutsgränser
+# linjär logistisk regression skapar linjära beslutsgränser
 # om vi har en kontinuerlig förklarande variabel så kommer vi ha en punkt d
 # som delar upp x i två delar
 # -oändligheten < x< d : här predikterar vi till klass 0 (i exemplet)
