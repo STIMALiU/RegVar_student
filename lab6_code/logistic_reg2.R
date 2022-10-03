@@ -56,7 +56,7 @@ library(plotly)
 plot_ly(z = ~xtabs(prob ~ x1 + x2, data = df1)) %>% add_surface()%>% 
   layout(scene = list(xaxis = list(title = 'x1'), yaxis = list(title = 'x2'),
           zaxis = list(title = 'prob')))
-# notera x=x1, y=x2 och z =prob i plotten
+# notera x = x1, y = x2 och z = p(y=1) i plotten
 
 # annan varianter:
 ggplot(data=df1,aes(x=x1,y=x2))+geom_contour_filled(aes(z=prob))
@@ -93,7 +93,7 @@ fig <- plot_ly(data = df2, x = ~x1, y = ~x2, z = ~y, color = ~class, colors = c(
                                         yaxis = list(title = 'x2'),
                                         zaxis = list(title = 'y')))
 # notera att plottar från plotly ligger under "Viewer"
-
+print(fig)
 ################################################################################
 # Skatta modellen
 ################################################################################
@@ -107,7 +107,7 @@ z3<-beta_vect3[1] + beta_vect3[2]*x1+beta_vect3[3]*x2
 y_prob3<-logistic_func(z3)
 y3<-rbinom(n = n_obs,size = 1,prob = y_prob3)
 df3<-data.frame(x1=x1,x2=x2,y=y3,class=as.factor(ifelse(y3==1,"1","0")))
-
+head(df3)
 
 ?formula
 ?glm
@@ -134,6 +134,7 @@ df3$y_hat<-as.factor(y_hat)
 
 # plotta skattade sannolikheter för alla datapunkter:
 ggplot(data = df3,aes(x=x1,y=x2))+geom_point(aes(col=y_hat_prob))+theme_bw()
+
 # plotta predikterade värden (0/1)
 ggplot(data = df3,aes(x=x1,y=x2))+geom_point(aes(col=y_hat))+theme_bw()+scale_color_manual(values = c("red","blue"))
 
@@ -153,7 +154,7 @@ z_hat-z_hat2
 
 
 # linjär logistik regression skapar linjära beslutsgränser
-# om vi har två kontinuerlig förklarande variabeler så kommer variabelrummet
+# om vi har två kontinuerlig förklarande variabler så kommer variabelrummet
 # som baseras på x1 och x2 delas av en en rät linje 
 # där alla punkter under linjen predikteras till en klass och alla punkter
 # ovanför linjen predikteras till den andra klassen
@@ -195,9 +196,11 @@ confint(A1,level = 0.99)
 # prediktera ny data
 no_valid<-30
 set.seed(876)
+# ny data:
 df_valid<-data.frame(x1=runif(n = no_valid,min = -5,max = 5),x2=runif(n = no_valid,min = -5,max = 5))
 qplot(df_valid$x1,df_valid$x2)
 dim(df_valid)
+# prediktion
 y_hat_prob_valid<-predict.glm(A1,newdata = df_valid,type = "response")
 df_valid$y_hat<-as.factor(ifelse(y_hat_prob_valid>=0.5,"1","0"))
 df_valid$data<-"valid"
@@ -212,6 +215,11 @@ dim(df3_all)
 ggplot(data = df3_all,aes(x=x1,y=x2))+geom_point(aes(col=y_hat,shape=data),size=3)+
   geom_abline(intercept=-coef(A1)[1]/coef(A1)[3], slope=-coef(A1)[2]/coef(A1)[3], linetype="dashed", color="green", size=1)+
   theme_bw()+scale_color_manual(values = c("red","blue"))
+# röd: predikteras till klass 0
+# blå: predikteras till klass 1
+# Cirkel: träningsdata
+# Triangel: valideringsdata
+# notera att alla 
 
 
 ################################################################################
@@ -231,6 +239,8 @@ str(my_data$Species)
 # vi sätter y=1 om setosa och y=0 om versicolor
 my_data$y<-ifelse(my_data$Species=="setosa",1,0)
 
+# hur många i varje klass?
+table(my_data$y)
 
 library(GGally)
 plot(my_data[,1:4],col=my_data$y+2)
