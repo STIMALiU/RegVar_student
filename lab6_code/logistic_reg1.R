@@ -178,6 +178,7 @@ A1_sum<-summary(A1)
 A1_sum
 A1_sum$coefficients
 
+
 A1_sum$family
 A1_sum$aic
 
@@ -200,6 +201,7 @@ y_hat_prob2<-logistic_func(z_hat)
 
 # predikterar en obs som 1 om sannolikheten är 0.5 eller högre
 y_hat<-ifelse(y_hat_prob>=0.5,1,0)
+
 
 # linjär logistik regression skapar linjära beslutsgränser
 # om vi har en kontinuerlig förklarande variabel så kommer vi ha en punkt d
