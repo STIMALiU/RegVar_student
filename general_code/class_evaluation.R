@@ -1,6 +1,7 @@
 # från:
 # https://www.isakhietala.com/teaching/732g12/#sammanfattande-funktion-f%C3%B6r-modellutv%C3%A4rdering 
 
+library(stringr)
 
 ## Funktion som skapar förväxlingsmatris med tillhörande mått för klassificeringsproblem
 
