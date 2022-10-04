@@ -35,9 +35,9 @@ train_index<-sample(x = nrow(iris),size = 100,replace = FALSE)
 head(train_index)
 
 data_train<-iris[train_index,]
-data_vaild<-iris[-train_index,]
+data_valid<-iris[-train_index,]
 nrow(data_train)
-nrow(data_vaild)
+nrow(data_valid)
 
 head(data_train)
 # vi kan manuellt välja ett antal modeller 
@@ -82,21 +82,21 @@ MSPR_train3<-mean((residuals(model3))^2)
 MSPR_train4<-mean((residuals(model4))^2)
 
 # prediktioner för valideringsdata
-y_hat_valid1<-predict(object = model1,newdata = data_vaild)
-MSPR_vaild1<-mean((data_vaild$Petal.Width-y_hat_valid1)^2)
+y_hat_valid1<-predict(object = model1,newdata = data_valid)
+MSPR_valid1<-mean((data_valid$Petal.Width-y_hat_valid1)^2)
 
-y_hat_valid2<-predict(object = model2,newdata = data_vaild)
-MSPR_vaild2<-mean((data_vaild$Petal.Width-y_hat_valid2)^2)
+y_hat_valid2<-predict(object = model2,newdata = data_valid)
+MSPR_valid2<-mean((data_valid$Petal.Width-y_hat_valid2)^2)
 
-y_hat_valid3<-predict(object = model3,newdata = data_vaild)
-MSPR_vaild3<-mean((data_vaild$Petal.Width-y_hat_valid3)^2)
+y_hat_valid3<-predict(object = model3,newdata = data_valid)
+MSPR_valid3<-mean((data_valid$Petal.Width-y_hat_valid3)^2)
 
-y_hat_valid4<-predict(object = model4,newdata = data_vaild)
-MSPR_vaild4<-mean((data_vaild$Petal.Width-y_hat_valid4)^2)
+y_hat_valid4<-predict(object = model4,newdata = data_valid)
+MSPR_valid4<-mean((data_valid$Petal.Width-y_hat_valid4)^2)
 
 # jämför värden
 df_compare<-data.frame(model=1:4,MSPR_train=c(MSPR_train1,MSPR_train2,MSPR_train3,MSPR_train4),
-           MSPR_vaild=c(MSPR_vaild1,MSPR_vaild2,MSPR_vaild3,MSPR_vaild4))
+           MSPR_valid=c(MSPR_valid1,MSPR_valid2,MSPR_valid3,MSPR_valid4))
 
 df_compare
 # model4 har lägst MSPR på träningsdata
