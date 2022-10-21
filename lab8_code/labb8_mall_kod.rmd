@@ -1,0 +1,511 @@
+---
+title: "Laboration 8"
+subtitle: "Kurskod: 732G46"
+author: 
+  - "Författare 1 Namn"
+  - "Författare 2 Namn"
+date: '20XX-XX-XX'
+
+# Ändrar utformningen av en sida
+geometry: "top=100pt,bottom=100pt,left=68pt,right=66pt"
+
+output: 
+  pdf_document:
+    fig_caption: yes
+    number_sections: yes
+
+# Lägger till angivelser om LaTeX-paket som ska användas i rapporten
+header-includes:
+  - \usepackage{float}
+  - \usepackage{longtable}
+  - \usepackage{caption}
+  - \usepackage{fancyhdr}
+  - \usepackage{titling}
+  - \usepackage[swedish, english]{babel}
+  - \renewcommand{\headrulewidth}{0pt}
+  
+  # Ändrar ett kommando så att man kan ange flera författare
+  - \renewcommand{\and}{\\}
+  
+  # Lägger till information till titelsidan
+  - \pretitle{\centering\vspace{0cm}{\large Labbrapport i Statistik \par}\vspace{4cm}\Huge\textbf}
+  - \posttitle{\vspace{1cm}\large\textbf{}\par}
+  - \preauthor{\centering\vspace{4cm}\normalsize}
+  - \postauthor{\par\vspace{4cm}}
+  - \predate{\centering{\normalsize Avdelningen för Statistik och maskininlärning \\ Institutionen för datavetenskap \\ Linköpings universitet \par}}
+  - \postdate{\par\vspace{2cm}}
+  - \raggedbottom
+
+# Lägger till en bibliografi med alla referenser som används i rapporten
+
+---
+
+<!-- Väljer språk till svenska för automatiska titlar -->
+\selectlanguage{swedish}
+
+<!-- Byter språket på figur- och tabellbeskrivningar till angivna namn -->
+\captionsetup[table]{name = Tabell}
+\setcounter{table}{0}
+\captionsetup[figure]{name = Figur}
+\setcounter{figure}{0}
+
+<!-- Anger att tabellbeskrivningar hamnar ovanför tabellen -->
+\floatstyle{plaintop}
+\restylefloat{table}
+
+<!-- Anger sidnumreringens position -->
+\fancyhf{}
+\fancyfoot[C]{\thepage}
+\pagestyle{fancy}
+
+<!-- Tar bort sidnumrering för förteckningar och titelsidan -->
+\pagenumbering{gobble}
+
+<!-- Anger sidbrytning -->
+\clearpage
+
+<!-- Skapar en innehållsförteckning och anger djupet av rubrikerna som ska visas -->
+\setcounter{tocdepth}{3}
+\tableofcontents
+
+<!-- Anger sidbrytning -->
+\clearpage
+
+<!-- Börjar sidnumreringen på sida 1 efter att alla förteckningar visats -->
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+<!-- Börjar med kapitel 1 -->
+# Introduktion
+Introducera laborationen; de datamaterial som används, målen med uppgifterna och annat förberedande arbete. Detta kan inkludera inläsning av data och paket där all form av output ska vara gömt såvida inget annat anges.
+
+```{r echo = FALSE, include = FALSE}
+#include = FALSE tar bort alla utskrifter som kommer från laddning av data eller paket
+library(ggplot2)
+library(xtable)
+library(cowplot)
+
+
+
+```
+
+
+<!-- Anger sidbrytning -->
+\clearpage
+
+
+# Uppgift 1: Icke-linjära samband
+
+
+## Del 1 till 6: Genera data
+
+I denna mall visas exempel med ```generate_signal()```, men det är enkelt att ändra till ```generate_signal_simple()``` i koden.
+
+```{r echo = TRUE,fig.height=3.5}
+# läser in funktioner:
+source(
+"https://raw.githubusercontent.com/STIMALiU/RegVar_student/main/data/generate_signal.R"
+)
+
+# ni ska välja seed enligt:
+# två studenter med liu-id: abcde123 och fghij456
+# detta ger seed: 123+456=579
+
+#------------------------------------------------------------------
+# Enkel data: generate_signal_simple()
+#------------------------------------------------------------------
+# seed=21 nedan är bara för illustration, ni ska använda er seed
+# avkommentera om ni väljer detta alt:
+# data_list<-generate_signal_simple(seed=21)
+
+#------------------------------------------------------------------
+# Mer komplicerad data: generate_signal()
+#------------------------------------------------------------------
+# vi sätter en seed:
+# seed=21 nedan är bara för illustration, ni ska använda er seed
+data_list<-generate_signal(seed=21)
+
+my_data<-data_list$data
+```
+
+Här har vi valt:
+
+- Att skapa data med ```generate_signal()```
+- seed = 21
+
+Skapar ett punktdiagram med $x$ mot $y$.
+
+```{r echo = TRUE,fig.height=3.5}
+qplot(my_data$x,my_data$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw()
+```
+
+Vi ser att det är ett tydligt icke-linjärt samband mellan $x$ och $y$. Det är en stor kulle i mitten av x (runt 0). Sen ser det vågigt ut till höger om den kullen. Till vänster så ser vi ett tydligt brott i y-led runt  $x=-13$.
+
+
+## Del 7: Dela upp i träningsdata och valideringsdata
+
+Vi delar upp data slumpmässigt i två delar, träningsdata (300 obs) och valideringsdata (200 obs).
+
+```{r echo = TRUE,fig.height=3.5}
+
+# exempel på hur man kan dela upp data:
+set.seed(5032)
+index_train<-sample(x=500,size=300)
+
+# my_data är en data.frame med er data
+# träningsdel:
+data_train<-my_data[index_train,]
+dim(data_train)
+
+# valideringsdel:
+data_valid<-my_data[-index_train,]
+dim(data_valid)
+
+# sorterar data för att göra det enklare med plottar senare
+
+data_train<-data_train[order(data_train$x),]
+data_valid<-data_valid[order(data_valid$x),]
+
+#kollar på träningsdata
+qplot(data_train$x,data_train$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw() 
+
+
+```
+
+## Del 8 och 9: Skapa två modeller för att modellera y
+
+
+Här ska ni hitta två stycken modeller som kan användas för att modellera y.
+
+Så ni utgår från $x$ och skapar en eller flera transformationer av $x$.
+
+Så låt ```z1```, ```z2```, ```z3```, ... , osv vara ett antal transformationer av $x$.
+
+Då sätter vi dessa i en designmatris: ```X = cbind(z1,z2,z3, osv)```
+
+Sen använder vi den designmatrisen för modellera $y$ med linjär regression, dvs använd ```lm()``` i R.
+
+Sen skapar vi två stycken sådana designmatriser, låt oss kalla dem ```X1``` och ```X2```.
+
+Ni har mycket frihet i hur ni väljer dessa designmatriser.
+
+Nedan följer ett exempel på analys av data från ```generate_signal()``` när seed är 21. Ni ska göra en liknande analys, men utifrån ert eget datamaterial. 
+
+**Ni kan inte använda exakt de exempel på ```X1``` och ```X2``` som presenteras nedan, utan ni måste göra modifikationer, och anpassa så att det passar ert dataset.**
+
+### Modell 1: 
+
+Här ska ni välja en kombination av transformationer av x.
+
+**Exempel:**
+
+Testar en kombination av polynom och stegfunktion.
+
+Testar att skapa ett stegfunktion som är 0 tills -12.5 och sen 1, kallar den för $z$. Brytpunkten visas i plotten nedan.
+(-12.5 var bättre än -13)
+
+```{r echo=FALSE, , fig.height = 3}
+qplot(data_train$x,data_train$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw() +geom_vline(xintercept=-12.5,linetype="dashed")
+```
+
+
+Sen lägger jag till polynom upp till grad 4.
+
+```{r echo = TRUE}
+# Skriv ut data
+z<-ifelse(test = data_train$x<=-12.5,0,1)
+
+
+x_cent<-data_train$x-mean(data_train$x)
+poly_mat<-poly(x = x_cent,degree = 4,raw = TRUE,simple = TRUE)
+```
+
+Plottar upp mina nya basfunktioner nedan. (Inget man måste göra.)
+
+```{r echo = TRUE}
+
+par(mfrow=c(2,2))
+plot(x_cent,poly_mat[,1],t="l",ylab="x")
+plot(x_cent,poly_mat[,2],t="l",ylab="x^2")
+plot(x_cent,poly_mat[,3],t="l",ylab="x^3")
+plot(x_cent,poly_mat[,4],t="l",ylab="x^4")
+par(mfrow=c(1,1))
+
+```
+
+Skapar min första designmatris: ```X1```
+```{r echo = TRUE, fig.height = 3.5}
+X1<-data.frame(poly_mat,z=z)
+head(X1,3)
+```
+
+Anpassar en modell med ```X1``` som designmatris  och sen plottar anpassade värden för träningsdata.
+
+```{r echo = TRUE, fig.height = 3}
+df_train1<-data.frame(y=data_train$y,X1)
+model1<-lm(y~.,data=df_train1)
+
+y_hat1<-fitted(model1)
+
+
+qplot(data_train$x,data_train$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw()+ geom_line(aes(x=data_train$x,y=y_hat1),col="red",size=1)
+
+```
+
+De anpassade värdena för modellen följer inte data så bra. Här har vi underanpassning. Men i detta exempel så säger vi att detta får bli vår modell 1.
+
+(så troligtvis så skulle vi vilja göra denna modell lite mer komplex)
+
+### Modell 2: 
+
+Här ska ni välja en annan kombination av transformationer av $x$.
+
+**Exempel:**
+
+Testar att använda linjära trunkerade polynombaser. Testar att använda 150 baser. 
+(150 är alldeles för många basfunktioner, testar det för att se hur det ser ut om man överanpassar data)
+
+```{r echo = TRUE, fig.height = 3}
+
+source(
+"https://raw.githubusercontent.com/STIMALiU/RegVar_student/main/lab8_code/trunc_power_basis.R"
+)
+
+basis_list_train<-trunc_power_basis(x = data_train$x,no_basis = 150,type = "linear",show_plot = FALSE)
+# här kan man testa att ändra no_basis till olika värden, och sen ser hur anpassningen blir.
+# högre värde på no_basis leder till en mer komplex modell, 
+# ett lägre värde leder till en enklare modell.
+# här kan man testa att ändra type till type = "quadratic"
+
+```
+
+Skapar min andra designmatris ```X2```:
+
+```{r echo = TRUE, fig.height = 3}
+X2<-basis_list_train$basis_mat
+dim(X2)
+head(X2[,1:5],3)
+```
+
+Anpassar en modell med ```X2``` som designmatris  och sen plottar anpassade värden för träningsdata.
+
+```{r echo = TRUE, fig.height = 3}
+
+df_train2<-data.frame(y=data_train$y,X2)
+model2<-lm(y~.,data=df_train2)
+
+y_hat2<-fitted(model2)
+
+
+qplot(data_train$x,data_train$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw()+ geom_line(aes(x=data_train$x,y=y_hat2),col="red",size=1)
+
+```
+
+Här ser vi att vi får en väldigt bra anspassning till data. Men den är troligen för bra. Våra anpassade värden har börjart modellera bruset i data. Så här har vi överanpassning. Men i detta exempel så säger vi att 
+detta får bli vår modell 2.
+
+(så här skulle vi vilja ha en enklare modell)
+
+## Del 10: De två valda modellerna
+
+Här presenterar jag de två valda modellerna. Ni ska förklara vad jag har ni för transformationer, men behöver inte förklara dessa med formler, det räcker att ni beskriver dessa i text.
+
+
+### Modell 1
+
+Modell 1 har följande variabler i sin designmatris:
+
+- en stegfunktion, z, som är 0 om $x\le-12.5$ och 1 annars
+- polynomtermer upp till grad 4
+
+Detta ger totalt 5 variabler i designmatrisen ```X1```.
+
+### Modell 2
+
+Modell 2 har följande variabler i sin designmatris:
+
+- 150 linjära trunkerade basfunktioner (jämt sprida i x:s variationsområde)
+
+Detta ger totalt 150 variabler i designmatrisen ```X1```. (Som sagt alldeles för många variabler här)
+
+## Del 11 och 12: Anpassade värden på träningsdata och valideringsdata
+
+*Notera vi skattar alltid våra modeller på träningsdata.*
+
+### Träningsdata
+
+Vi har ovan skattat modellerna och tagit fram plottar för anpassade värden för träningsdata. Lägger dessa bredvid varandra här.
+
+```{r echo = TRUE, fig.height = 6.5}
+
+p1<-qplot(data_train$x,data_train$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw()+ geom_line(aes(x=data_train$x,y=y_hat1),col="red",size=1)+ggtitle("Modell 1: anpassade värden på träningsdata")
+
+p2<-qplot(data_train$x,data_train$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw()+ geom_line(aes(x=data_train$x,y=y_hat2),col="red",size=1)+ggtitle("Modell 2: anpassade värden på träningsdata")
+
+plot_grid(p1,p2,nrow=2)
+
+```
+
+Hur skiljer sig anpassningarna åt här mellan modell 1 och modell 2? Kommentera!
+
+### Valideringsdata
+
+För att ta fram anpassade värden här så måste vi först
+
+- skapa designmatriserna ```X1``` och ```X2```, fast för valideringsdata. Låt oss kalla dessa för ```X1_valid``` och ```X2_valid```.
+- göra prediktioner för valideringsdata med ```predict()```, där vi använder oss av ```X1_valid``` och ```X2_valid```.
+
+```{r echo = TRUE, fig.height = 3,warning=FALSE}
+#-------------------------------------------------------------------------------
+# modell 1
+#-------------------------------------------------------------------------------
+# ta fram X1_valid:
+
+
+# stegfunktionen:
+z_valid<-ifelse(test = data_valid$x<=-12.5,0,1)
+# ploynom:
+x_cent_valid<-data_valid$x-mean(data_train$x) # notera att vi centrerar med mean() för träningsdata
+poly_mat_valid<-poly(x = x_cent_valid,degree = 4,raw = TRUE,simple = TRUE)
+# slår ihop
+X1_valid<-data.frame(poly_mat_valid,z=z_valid)
+
+# prediktioner med X1_valid
+y_hat1_valid<-predict(object = model1,newdata = X1_valid)
+
+#-------------------------------------------------------------------------------
+# modell 2
+#-------------------------------------------------------------------------------
+# ta fram X2_valid:
+
+basis_list_valid<-trunc_power_basis(x = data_valid$x,no_basis = 150,type = "linear",show_plot = FALSE)
+
+X2_valid<-basis_list_valid$basis_mat
+X2_valid<-as.data.frame(X2_valid)
+dim(X2_valid)
+
+# prediktioner med X2_valid
+y_hat2_valid<-predict(object = model2,newdata = X2_valid)  
+
+
+
+```
+Nu tar vi fram plottar för valideringsdata.
+
+
+```{r echo = TRUE, fig.height = 6.5}
+
+
+p3<-qplot(data_valid$x,data_valid$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw()+ geom_line(aes(x=data_valid$x,y=y_hat1_valid),col="red",size=1)+ggtitle("Modell 1: anpassade värden på valideringsdata")
+
+p4<-qplot(data_valid$x,data_valid$y,geom="point",xlab="Insignal: x",ylab="Utsignal: y")+theme_bw()+ geom_line(aes(x=data_valid$x,y=y_hat2_valid),col="red",size=1)+ggtitle("Modell 2: anpassade värden på valideringsdata")
+
+plot_grid(p3,p4,nrow=2)
+
+```
+
+- Modell 1 verkar fungera lika bra/dåligt på träningsdata som på  valideringsdata.
+- Modell 2 har tydlig överanpassning på träningsdata, och därför blir anpassningen på valideringsdata mycket sämre jämfört med träningsdata.
+
+
+## Del 13: MSPR på träningsdata och valideringsdata
+
+Räknar ut MSPR på träningsdata: 
+
+```{r echo = TRUE, results = "asis"}
+MSPR_train1<-mean((residuals(model1))^2)
+MSPR_train2<-mean((residuals(model2))^2)
+```
+
+Räknar ut MSPR på valideringsdata: 
+
+```{r echo = TRUE, results = "asis"}
+# använder anpassade värden som räknats ut tidigare:
+# y_hat1_valid, y_hat2_valid
+# vi jämför dessa med observerade y i valideringsdata.
+
+res_vect1<-data_valid$y-y_hat1_valid
+res_vect2<-data_valid$y-y_hat2_valid
+
+MSPR_valid1<-mean(res_vect1^2)
+MSPR_valid2<-mean(res_vect2^2)
+
+```
+
+Sätter samman i en tabell:
+
+```{r echo = TRUE, fig.height = 4, fig.width = 7, fig.cap = "\\label{fig:En-figur}Min figur", fig.pos = "H!"}
+mspr_train<-c(MSPR_train1,MSPR_train2)
+mspr_valid<-c(MSPR_valid1,MSPR_valid2)
+df_mspr<-round(data.frame(MSPR_train=mspr_train,MSPR_valid=mspr_valid),5)
+row.names(df_mspr)<-c("modell 1","modell 2")
+knitr::kable(df_mspr)
+```
+
+Vilken modell var bäst på träningsdata? Vilken modell var bäst på valideringsdata?
+
+## Del 14: Residualer
+
+
+```{r echo = TRUE, fig.height = 4}
+source(
+"https://raw.githubusercontent.com/STIMALiU/RegVar_student/main/general_code/lm_diagnostics.R"
+)
+
+```
+
+### Modell 1 och träningsdata
+
+Residualer för modell 1 och träningsdata:
+```{r echo = TRUE, fig.height = 3}
+lm_diagnostics(lm_obj = model1)
+```
+
+Det finns problem i residualerna ovan...
+
+### Modell 1 och valideringsdata
+
+Residualer för modell 1 och valideringsdata:
+
+```{r echo = TRUE, fig.height = 3}
+model_diagnostics(res_vect = res_vect1,fit_vect = y_hat1_valid)
+```
+
+Det finns problem i residualerna ovan...
+
+
+
+### Modell 2 och träningsdata
+
+Residualer för modell 2 och träningsdata:
+```{r echo = TRUE, fig.height = 3}
+lm_diagnostics(lm_obj = model2)
+```
+
+Kommentera...
+
+### Modell 2 och valideringsdata
+
+Residualer för modell 2 och valideringsdata:
+
+```{r echo = TRUE, fig.height = 3}
+model_diagnostics(res_vect = res_vect2,fit_vect = y_hat2_valid)
+```
+
+Kommentera...
+
+
+
+## Del 15 och 16: Analys
+
+Kommentera och analysera
+
+- Fokusera på: 
+  - hur bra era anpassade värdena blir
+  - MSPR
+  - residualanalysen.
+- Finns det överanpassning eller underanpassning?
+- Är ni nöjda med modellerna? Blev de bra? Är någon modell bättre än den andra? Anser ni att
+modellerna kan användas för att prediktera ny liknande data?
+
+
