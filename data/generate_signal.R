@@ -57,3 +57,59 @@ generate_signal<-function(seed=NULL){
   res_list<-list(data=data.frame(x=x,y=y),seed=seed)
   return(res_list)
 }
+
+generate_signal_simple<-function(seed=NULL){
+  n_obs<-500
+  if(is.null(seed)){
+    seed<-sample(1e5,1)
+  }
+  
+  set.seed(seed)
+  x<-sort(runif(n = n_obs,min = -20,max = 20))
+  
+  
+  # sample break point
+  bp<-runif(n = 1,min = -4,max = 4)
+  
+  
+  # linear part
+  
+  beta1<-runif(n = 1,min = -1,max = 1)
+  beta0<-sample(x = c(-5,-4,-3,3,4,5),size = 1)
+  
+  y_lin<-beta0+beta1*x
+  y_lin0<-beta0+beta1*bp
+  # quadratic part
+  
+  beta2<-sample(x = c(-0.1,-0.05,0.05,0.1),size = 1)
+  beta1<-runif(n = 1,min = -0.4,max = 0.4)
+  beta0<-sample(x = c(-5,-4,-3,3,4,5),size = 1)
+  
+  y_quad<-beta0+beta1*x+beta2*x^2
+  y_quad0<-beta0+beta1*bp+beta2*bp^2
+  
+  if(abs(y_lin0-y_quad0)<7){
+    shift<-sample(x = c(7,10,12),size = 1)
+    if(y_lin0>y_quad0){
+      y_lin<-y_lin+shift
+    }else{
+      y_quad<-y_quad+shift
+    }
+  }
+  
+  side<-sample(x = 2,size = 1)
+  if(side==1){
+    left_side<-y_lin
+    right_side<-y_quad
+  }else{
+    left_side<-y_quad
+    right_side<-y_lin
+  }
+  
+  y0<-ifelse(x<=bp,left_side,right_side)
+  
+  y<-y0+rnorm(n = n_obs,sd = 0.8)
+  
+  res_list<-list(data=data.frame(x=x,y=y),seed=seed)
+  return(res_list)
+}
