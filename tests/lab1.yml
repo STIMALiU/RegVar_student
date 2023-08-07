@@ -2,9 +2,9 @@
 name  : D1
 description :  "732G46: Lab 1"
 tasks:
-  simple_lm:
+  lmSimple:
     url:
-      - tasks/simple_lm_tests.R
+      - tasks/lmSimple_tests.R
 mandatory:
   url:
     - mandatory_group.R
